@@ -24,6 +24,69 @@ export class ServiceGrades {
     }
   }
 
+  static async edit(grade: Grade) {
+    try {
+      const { data, error } = await supabase
+        .from('grades')
+        .update(grade)
+        .eq('id', grade.id)
+        .select()
+        .maybeSingle();
+      if (error) throw error;
+      return {
+        isSuccess: true,
+        data: data,
+        error: error
+      };
+    } catch (error) {
+      return {
+        isSuccess: false,
+        data: null,
+        error: error
+      };
+    }
+  }
+
+  static async remove(id: number) {
+    try {
+      const { error } = await supabase.from('grades').delete().eq('id', id);
+      if (error) throw error;
+      return {
+        isSuccess: true,
+        data: null,
+        error: error
+      };
+    } catch (error) {
+      return {
+        isSuccess: false,
+        data: null,
+        error: error
+      };
+    }
+  }
+
+  static async hasAtLeastOneStudent(id: number) {
+    try {
+      const { data, error } = await supabase
+        .from('students')
+        .select('id, grade_id')
+        .eq('grade_id', id)
+        .limit(1);
+      if (error) throw error;
+      return {
+        isSuccess: true,
+        data: Array.isArray(data) && data.length > 0,
+        error: error
+      };
+    } catch (error) {
+      return {
+        isSuccess: false,
+        data: null,
+        error: error
+      };
+    }
+  }
+
   static async findAll() {
     try {
       const { data, error } = await supabase

@@ -3,19 +3,20 @@
   import IconXMark from '$lib/icons/icon_x_mark.svelte';
   import type { Snippet } from 'svelte';
   import WrapperDelimiter from './wrapper_delimiter.svelte';
-  import { isStudentModalOpen } from '$lib/stores/store_modal';
 
   let {
     title = '',
     isOpen = false,
     isClosingAllowed = true,
     onClose = () => {},
+    onToggle = () => {},
     children
   }: {
     title?: string;
     isOpen?: boolean;
     isClosingAllowed?: boolean;
     onClose?: () => void;
+    onToggle?: (isOpen: boolean) => void;
     children: Snippet<[]>;
   } = $props();
 
@@ -26,14 +27,10 @@
 
     if (isOpen && !dialog.open) {
       dialog.show();
-      if (!$isStudentModalOpen) {
-        isStudentModalOpen.set(true);
-      }
+      onToggle?.(true);
     } else if (!isOpen && dialog.open) {
       dialog.close();
-      if ($isStudentModalOpen) {
-        isStudentModalOpen.set(false);
-      }
+      onToggle?.(false);
     }
   });
 </script>

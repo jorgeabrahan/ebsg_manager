@@ -34,7 +34,6 @@
       password: entries.password
     });
     $isUserBeingFetched = false;
-    console.log(data);
     $user = data;
     if (isSuccess && data != null) {
       goto('/dashboard');

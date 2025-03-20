@@ -5,8 +5,9 @@
   import { ServiceStudents } from '$lib/services/service_students';
   import { grades, students, studentsPage } from '$lib/stores/store_dashboard';
   import {
-    isStudentBeingCreated,
-    isCreateStudentModalOpen
+    isEditStudentModalOpen,
+    isStudentBeingUpdated,
+    studentToManage
   } from '$lib/stores/store_modal';
   import { UtilToast } from '$lib/utils/util_toast';
   import WrapperModal from '$lib/wrappers/wrapper_modal.svelte';
@@ -16,7 +17,7 @@
       currentTarget: EventTarget & HTMLFormElement;
     }
   ) {
-    if ($isStudentBeingCreated) return;
+    if ($isStudentBeingUpdated || $studentToManage == null) return;
     e.preventDefault();
     const form = e.currentTarget;
     const entries = Object.fromEntries(new FormData(form)) as {
@@ -31,47 +32,50 @@
       UtilToast.error('Selecciona un grado.');
       return;
     }
-    $isStudentBeingCreated = true;
+    $isStudentBeingUpdated = true;
     try {
-      const { isSuccess, error } = await ServiceStudents.create({
+      const { isSuccess, error } = await ServiceStudents.edit({
+        ...$studentToManage,
         name: entries.name,
         grade_id: parseInt(entries.gradeId)
       });
       if (!isSuccess) throw error;
       form.reset();
-      $isCreateStudentModalOpen = false;
+      $isEditStudentModalOpen = false;
+      $studentToManage = null;
       students.set({});
       $studentsPage = 1;
     } catch {
       UtilToast.error('Ocurrió un error al crear el estudiante.');
     } finally {
-      $isStudentBeingCreated = false;
+      $isStudentBeingUpdated = false;
     }
   }
 </script>
 
 <WrapperModal
-  isOpen={$isCreateStudentModalOpen}
-  title="Crear estudiante"
+  isOpen={$isEditStudentModalOpen}
+  title="Editar estudiante"
   onClose={() => {
-    isCreateStudentModalOpen.update((value) => !value);
+    isEditStudentModalOpen.update((value) => !value);
   }}
   onToggle={(isOpen) => {
     if (
-      (!$isCreateStudentModalOpen && isOpen) ||
-      ($isCreateStudentModalOpen && !isOpen)
+      (!$isEditStudentModalOpen && isOpen) ||
+      ($isEditStudentModalOpen && !isOpen)
     ) {
-      isCreateStudentModalOpen.set(isOpen);
+      isEditStudentModalOpen.set(isOpen);
     }
   }}
-  isClosingAllowed={!$isStudentBeingCreated}
+  isClosingAllowed={!$isStudentBeingUpdated}
 >
   <form class="space-y-4 mt-4" onsubmit={onSubmit}>
     <CustomInput
       label="Nombre"
       id="name"
       type="text"
-      disabled={$isStudentBeingCreated}
+      value={$studentToManage?.name}
+      disabled={$isStudentBeingUpdated}
       required
     />
     <CustomSelect
@@ -81,14 +85,15 @@
         value: grade.id?.toString(),
         label: grade.name
       }))}
-      disabled={$isStudentBeingCreated}
+      value={$studentToManage?.grade_id?.toString()}
+      disabled={$isStudentBeingUpdated}
       includeDefaultOption
       required
     />
     <CustomButton
       type="submit"
       className="flex justify-center items-center gap-1 w-full bg-steel-blue"
-      disabled={$isStudentBeingCreated}
+      disabled={$isStudentBeingUpdated}
     >
       Guardar estudiante
     </CustomButton>

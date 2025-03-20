@@ -5,10 +5,12 @@
   import { ServiceStudents } from '$lib/services/service_students';
   import {
     grades,
+    isGradesLoading,
     isStudentsLoading,
     students,
     studentsLimit,
-    studentsPage
+    studentsPage,
+    studentsTotalPages
   } from '$lib/stores/store_dashboard';
   import WrapperDelimiter from '$lib/wrappers/wrapper_delimiter.svelte';
   import { onMount } from 'svelte';
@@ -16,9 +18,14 @@
   import StudentsTable from './students_table.svelte';
   import {
     isGradeModalOpen,
-    isStudentModalOpen
+    isCreateStudentModalOpen
   } from '$lib/stores/store_modal';
   import ModalCreateGrade from '$lib/modals/modal_create_grade.svelte';
+  import ModalStudentActions from '$lib/modals/modal_student_actions.svelte';
+  import CustomButton from '$lib/custom_button.svelte';
+  import ModalEditStudent from '$lib/modals/modal_edit_student.svelte';
+  import ModalGradeActions from '$lib/modals/modal_grade_actions.svelte';
+  import ModalEditGrade from '$lib/modals/modal_edit_grade.svelte';
 
   const VIEW_KEYS = {
     students: 'students',
@@ -37,7 +44,7 @@
       $isStudentsLoading = true;
       (async () => {
         try {
-          const { data, error } = await ServiceStudents.findAll({
+          const { data, pagination, error } = await ServiceStudents.findAll({
             pagination: {
               page: $studentsPage,
               limit: $studentsLimit
@@ -47,13 +54,31 @@
             return;
           }
           $students[`page_${$studentsPage}`] = data;
+          $studentsTotalPages = pagination.totalPages;
         } finally {
-          $isStudentsLoading = true;
+          $isStudentsLoading = false;
+        }
+      })();
+      return;
+    }
+    if (view === VIEW_KEYS.grades) {
+      if ($grades.length > 0) return;
+      $isGradesLoading = true;
+      (async () => {
+        try {
+          const { data, error } = await ServiceGrades.findAll();
+          if (data == null || error) {
+            return;
+          }
+          $grades = data;
+        } finally {
+          $isGradesLoading = false;
         }
       })();
       return;
     }
   });
+
   // grades should be available immediately after the page is loaded
   onMount(async () => {
     const { data, error } = await ServiceGrades.findAll();
@@ -65,10 +90,12 @@
 
   function handleCreateNew() {
     if (view === VIEW_KEYS.students) {
-      isStudentModalOpen.set(true);
+      isCreateStudentModalOpen.set(true);
       return;
     }
-    isGradeModalOpen.set(true);
+    if (view === VIEW_KEYS.grades) {
+      isGradeModalOpen.set(true);
+    }
   }
 </script>
 
@@ -93,9 +120,9 @@
       class="bg-night-700 block px-4 py-2 text-sm rounded-sm border border-white/40 focus:border-white/80 transition-colors duration-300"
       >Filtrar</button
     > -->
-    <button
-      class="bg-night-700 block px-4 py-2 text-sm rounded-sm border border-white/40 focus:border-white/80 transition-colors duration-300"
-      onclick={handleCreateNew}>Nuevo</button
+    <CustomButton
+      className="bg-night-700 border border-white/40"
+      onclick={handleCreateNew}>Nuevo</CustomButton
     >
   </div>
   {#if view === VIEW_KEYS.students}
@@ -108,3 +135,7 @@
 
 <ModalCreateStudent />
 <ModalCreateGrade />
+<ModalStudentActions />
+<ModalEditStudent />
+<ModalGradeActions />
+<ModalEditGrade />

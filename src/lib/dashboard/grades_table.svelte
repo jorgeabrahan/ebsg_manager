@@ -1,5 +1,11 @@
 <script lang="ts">
   import { grades } from '$lib/stores/store_dashboard';
+  import { gradeToManage } from '$lib/stores/store_modal';
+  import type { Grade } from '$lib/types/database';
+
+  const handleRowClick = (grade: Grade) => {
+    gradeToManage.set(grade);
+  };
 </script>
 
 <table class="w-full border-collapse">
@@ -13,7 +19,10 @@
   <tbody>
     {#if $grades != null}
       {#each $grades as grade}
-        <tr class="border-b border-white/30">
+        <tr
+          class="border-b border-white/30"
+          onclick={() => handleRowClick(grade)}
+        >
           <td class="px-3 py-2 text-sm">{grade.name}</td>
           <td class="px-3 py-2 text-sm">{grade.tuition}</td>
           <td class="px-3 py-2 text-sm">{grade.installment}</td>
