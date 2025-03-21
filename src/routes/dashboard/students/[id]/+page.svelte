@@ -191,38 +191,43 @@
           {#if $payments != null && $payments.length > 0}
             {#each $payments as payment}
               <tr class="border-b border-white/30">
-                <td class="px-3 py-2 text-sm flex items-center gap-2">
-                  <input
-                    class="w-[18px] h-[18px] cursor-pointer"
-                    type="checkbox"
-                    id={`paymentSelect-${payment.id}`}
-                    name={`paymentSelect-${payment.id}`}
-                    onchange={(e) => {
-                      if (!e.target || !(e.target instanceof HTMLInputElement))
-                        return;
-                      onPaymentSelectToggle(payment, e.target.checked);
-                    }}
-                    disabled={$isPaymentsLoading}
-                  />
-                  <button
-                    class="flex items-center justify-center w-max rounded-lg p-1 bg-night-700 border border-white/40"
-                    onclick={() => {
-                      UtilToast.action(
-                        `¿Seguro que deseas eliminar el pago del ${payment.month_paid?.split('-').slice(0, 2).join(' - ')}?`,
-                        {
-                          action: {
-                            label: 'Eliminar',
-                            onClick: () => {
-                              onDeletePayment(payment.id);
+                <td class="px-3 py-2">
+                  <div class="text-sm flex items-center gap-2">
+                    <input
+                      class="w-[18px] h-[18px] cursor-pointer"
+                      type="checkbox"
+                      id={`paymentSelect-${payment.id}`}
+                      name={`paymentSelect-${payment.id}`}
+                      onchange={(e) => {
+                        if (
+                          !e.target ||
+                          !(e.target instanceof HTMLInputElement)
+                        )
+                          return;
+                        onPaymentSelectToggle(payment, e.target.checked);
+                      }}
+                      disabled={$isPaymentsLoading}
+                    />
+                    <button
+                      class="flex items-center justify-center w-max rounded-lg p-1 bg-night-700 border border-white/40"
+                      onclick={() => {
+                        UtilToast.action(
+                          `¿Seguro que deseas eliminar el pago del ${payment.month_paid?.split('-').slice(0, 2).join(' - ')}?`,
+                          {
+                            action: {
+                              label: 'Eliminar',
+                              onClick: () => {
+                                onDeletePayment(payment.id);
+                              }
                             }
                           }
-                        }
-                      );
-                    }}
-                    disabled={$isPaymentsLoading}
-                  >
-                    <IconTrash className="pointer-events-none" size={12} />
-                  </button>
+                        );
+                      }}
+                      disabled={$isPaymentsLoading}
+                    >
+                      <IconTrash className="pointer-events-none" size={12} />
+                    </button>
+                  </div>
                 </td>
                 <td class="px-3 py-2 text-sm"
                   >{payment.month_paid?.split('-').slice(0, 2).join(' - ')}</td
