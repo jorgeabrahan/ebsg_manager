@@ -8,6 +8,7 @@
     isStudentBeingDeleted,
     studentToManage
   } from '$lib/stores/store_modal';
+  import { payments } from '$lib/stores/store_student';
   import { UtilToast } from '$lib/utils/util_toast';
   import WrapperModal from '$lib/wrappers/wrapper_modal.svelte';
 
@@ -46,7 +47,10 @@
     className="bg-night-700 border border-white/40"
     disabled={$isStudentBeingDeleted}
     onclick={() => {
-      goto(`/dashboard/students/${$studentToManage?.id}`);
+      $payments = null;
+      const studentId = $studentToManage?.id;
+      $studentToManage = null;
+      goto(`/dashboard/students/${studentId}`);
     }}>Detalles</CustomButton
   >
   <CustomButton

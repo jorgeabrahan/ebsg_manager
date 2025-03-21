@@ -46,7 +46,23 @@
         $currentPaymentYear
       );
       if (!isSuccess) return;
-      years = y.map((yr: { payment_year: number }) => yr?.payment_year);
+      const currentYear = new Date().getFullYear();
+      if (y == null) {
+        years = [currentYear];
+        return;
+      }
+      if (
+        y != null &&
+        Array.isArray(y) &&
+        y.find((ye) => ye?.payment_year === currentYear) == null
+      ) {
+        years = [
+          ...(y?.map((yr: { payment_year: number }) => yr?.payment_year) ?? []),
+          currentYear
+        ];
+        return;
+      }
+      years = y?.map((yr: { payment_year: number }) => yr?.payment_year) ?? [];
     })();
   });
   $effect(() => {
@@ -60,7 +76,9 @@
             year: $currentPaymentYear
           }
         });
-        if (error || data == null) return;
+        if (error || data == null) {
+          return;
+        }
         $payments = data;
       } finally {
         $isPaymentsLoading = false;
@@ -138,7 +156,7 @@
         if (!e.target || !(e.target instanceof HTMLSelectElement)) return;
         $currentPaymentYear = Number(e.target.value);
       }}
-      options={years.map((y) => ({
+      options={years?.map((y) => ({
         value: y.toString(),
         label: y.toString()
       }))}
@@ -232,8 +250,8 @@
             {/each}
           {:else}
             <tr>
-              <td colspan="6" class="px-3 py-2 text-center text-sm">
-                {#if isPaymentsLoading}
+              <td colspan="7" class="px-3 py-2 text-center text-sm">
+                {#if $isPaymentsLoading}
                   Cargando...
                 {:else}
                   No hay datos disponibles
