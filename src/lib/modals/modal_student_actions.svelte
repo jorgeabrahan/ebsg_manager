@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
   import CustomButton from '$lib/custom_button.svelte';
   import { ServiceStudents } from '$lib/services/service_students';
   import { students, studentsPage } from '$lib/stores/store_dashboard';
@@ -43,7 +44,10 @@
   >
   <CustomButton
     className="bg-night-700 border border-white/40"
-    disabled={$isStudentBeingDeleted}>Detalles</CustomButton
+    disabled={$isStudentBeingDeleted}
+    onclick={() => {
+      goto(`/dashboard/students/${$studentToManage?.id}`);
+    }}>Detalles</CustomButton
   >
   <CustomButton
     className="bg-night-700 border border-white/40"

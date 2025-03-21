@@ -1,4 +1,4 @@
-import type { Grade, Student } from '$lib/types/database';
+import type { Grade, PaymentMethod, Student } from '$lib/types/database';
 import { writable } from 'svelte/store';
 
 export const grades = writable<Grade[]>([]);
@@ -11,3 +11,5 @@ export const studentsPage = writable(1);
 export const studentsLimit = writable(20);
 export const studentsTotalPages = writable(0);
 export const isStudentsLoading = writable(false);
+
+export const paymentMethods = writable<PaymentMethod[]>([]);

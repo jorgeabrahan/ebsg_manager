@@ -12,3 +12,19 @@ export interface Student {
   grade_id: number;
   created_at: string;
 }
+
+export interface PaymentMethod {
+  id: number;
+  name: string;
+}
+
+export interface Payment {
+  id: number;
+  student_id: number;
+  month_paid: string;
+  amount_paid: number;
+  payment_method: number;
+  created_at: string;
+  grade_name: string;
+  is_tuition_payment: boolean;
+}

@@ -67,12 +67,12 @@
       Iniciar sesión
     </CustomButton>
   </form>
-  <p class="text-center text-sm text-white/40">
+  <!-- <p class="text-center text-sm text-white/40">
     ¿No tienes una cuenta?{' '}
     <a
       href="/sign-up"
       class={`text-steel-blue-500/80 ${$isUserBeingFetched ? 'pointer-events-none opacity-50' : ''}`}
       >Registrate</a
     >
-  </p>
+  </p> -->
 </WrapperDelimiter>

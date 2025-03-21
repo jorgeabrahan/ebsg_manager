@@ -14,7 +14,9 @@
       $user = data;
       $isUserBeingFetched = false;
       const isAuthenticated = data != null && data?.role === 'authenticated';
-      const isDashboardPath = window.location.pathname === '/dashboard';
+      const isDashboardPath =
+        window.location.pathname === '/dashboard' ||
+        window.location.pathname.startsWith('/dashboard/students');
       const isAuthPath =
         window.location.pathname === '/sign-in' ||
         window.location.pathname === '/sign-up';
@@ -33,6 +35,13 @@
         } else {
           goto('/sign-in');
         }
+      }
+      if (window.location.pathname === '/sign-up') {
+        if (isAuthenticated) {
+          goto('/dashboard');
+          return;
+        }
+        goto('/sign-in');
       }
     })();
   });

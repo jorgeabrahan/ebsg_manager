@@ -56,7 +56,27 @@ export class ServiceStudents {
       };
     }
   }
-
+  static async find(id: number) {
+    try {
+      const { data, error } = await supabase
+        .from('students')
+        .select('id, name, grade_id, created_at')
+        .eq('id', id)
+        .maybeSingle();
+      if (error) throw error;
+      return {
+        isSuccess: true,
+        data: data,
+        error: error
+      };
+    } catch (error) {
+      return {
+        isSuccess: false,
+        data: null,
+        error: error
+      };
+    }
+  }
   static async findAll(
     options: {
       pagination?: {

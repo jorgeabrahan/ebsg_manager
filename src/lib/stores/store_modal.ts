@@ -16,3 +16,6 @@ export const gradeToManage = writable<Grade | null>(null);
 export const isGradeBeingDeleted = writable(false);
 export const isEditGradeModalOpen = writable(false);
 export const isGradeBeingUpdated = writable(false);
+
+export const studentToAddPayment = writable<Student | null>(null);
+export const isAddingPaymentToStudent = writable(false);

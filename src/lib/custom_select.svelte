@@ -27,8 +27,8 @@
 <div class={`relative ${disabled && 'opacity-50'} ${className}`}>
   <label
     for={id}
-    class={`absolute left-3 top-3 ${
-      isCompact ? 'text-[10px]' : 'text-xs'
+    class={`absolute left-3 ${
+      isCompact ? 'text-[10px] top-[6px]' : 'text-xs top-3'
     } text-white/40`}
   >
     {label}
