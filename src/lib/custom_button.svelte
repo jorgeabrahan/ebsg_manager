@@ -19,7 +19,7 @@
 <button
   class={`text-xs ${disabled && 'opacity-50'} ${
     /\bp(-|x-|y-)/.test(className) ? '' : 'px-5 py-2'
-  } ${!className.includes('rounded-') && 'rounded-lg'} ${className}`}
+  } ${!className.includes('rounded-') && 'rounded-sm'} ${className}`}
   {type}
   {disabled}
   onmousedown={(e) => {

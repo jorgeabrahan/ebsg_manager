@@ -8,6 +8,7 @@
     isGradesLoading,
     isStudentsLoading,
     students,
+    studentsGrade,
     studentsLimit,
     studentsPage,
     studentsTotalPages
@@ -48,6 +49,10 @@
             pagination: {
               page: $studentsPage,
               limit: $studentsLimit
+            },
+            filters: {
+              gradeId:
+                $studentsGrade === 'all' ? undefined : Number($studentsGrade)
             }
           });
           if (data == null || error) {
@@ -116,10 +121,29 @@
     isCompact
   />
   <div class="flex items-stretch justify-end gap-3 mb-2">
-    <!-- <button
-      class="bg-night-700 block px-4 py-2 text-sm rounded-sm border border-white/40 focus:border-white/80 transition-colors duration-300"
-      >Filtrar</button
-    > -->
+    <CustomSelect
+      className="w-[150px]"
+      id="currentGrade"
+      label="Grado"
+      value={$studentsGrade}
+      onchange={(e) => {
+        if (!e.target || !(e.target instanceof HTMLSelectElement)) return;
+        $studentsGrade = e.target.value;
+        students.set({});
+        $studentsPage = 1;
+      }}
+      options={[
+        {
+          value: 'all',
+          label: 'Todos'
+        },
+        ...$grades.map((g) => ({
+          value: g.id.toString(),
+          label: g.name
+        }))
+      ]}
+      isCompact
+    />
     <CustomButton
       className="bg-night-700 border border-white/40"
       onclick={handleCreateNew}>Nuevo</CustomButton

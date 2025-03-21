@@ -8,6 +8,7 @@ export const students = writable<{
   [page: string]: Student[];
 }>({});
 export const studentsPage = writable(1);
+export const studentsGrade = writable<string>('all');
 export const studentsLimit = writable(20);
 export const studentsTotalPages = writable(0);
 export const isStudentsLoading = writable(false);
