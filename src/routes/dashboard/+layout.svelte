@@ -16,7 +16,7 @@
 
 <WrapperDelimiter>
   <nav class="flex items-center justify-between gap-2 my-3">
-    <h2 class="font-bold text-xl">Elen Billingual School Garden</h2>
+    <h2 class="font-bold text-xl">Eden Billingual School Garden</h2>
     <button
       class="flex items-center justify-center w-max rounded-lg p-3 bg-night-700 border border-white/40"
       onclick={onLogout}
