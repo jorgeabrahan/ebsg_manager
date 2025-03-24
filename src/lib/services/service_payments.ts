@@ -91,6 +91,7 @@ export class ServicePayments {
       const { data, error } = await supabase
         .from('payments')
         .select('id, month_paid, student_id')
+        .eq('is_tuition_payment', false)
         .eq('month_paid', monthPaid)
         .eq('student_id', studentId)
         .limit(1);
